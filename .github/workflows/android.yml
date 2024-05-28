@@ -28,19 +28,10 @@ jobs:
         build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
         build-scan-terms-of-use-agree: "yes"
 
-    - name: Setup keystore
-      run: |
-        echo "${{secrets.KEYSTORE}}" > keystore.jks.asc
-        gpg -d --batch --passphrase "${{secrets.GPG_PASS}}" --output app/keystore.jks keystore.jks.asc
-        
     - name: Build App
       run: |
         chmod +x gradlew
-        ./gradlew assembleDefaultFlavor \
-            -Pkeystore=keystore.jks \
-            -Pstorepass=${{secrets.STORE_PASS}} \
-            -Pkeypass=${{secrets.KEY_PASS}} \
-            -Pkeyalias=${{secrets.KEY_NAME}}
+        ./gradlew assembleDefaultFlavor
 
     - name: Archive APK
       uses: actions/upload-artifact@v4
